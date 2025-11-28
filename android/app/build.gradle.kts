@@ -9,7 +9,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.smart_e_kantin_mobile"
+    namespace = "com.example.project_e_kantin"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -23,7 +23,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.example.smart_e_kantin_mobile"
+        applicationId = "com.example.project_e_kantin"
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
