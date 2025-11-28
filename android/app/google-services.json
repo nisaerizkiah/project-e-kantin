@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "355675229620",
+    "project_id": "smarrtekanti",
+    "storage_bucket": "smarrtekanti.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:355675229620:android:62eed5ebc538685cb2f6e1",
+        "android_client_info": {
+          "package_name": "com.example.project_e_kantin"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAOEeOW946Je4VdR1JIQ66IFRKFzGNRlNc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
