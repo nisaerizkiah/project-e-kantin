@@ -36,11 +36,11 @@ class _LoginScreen_ajengState extends State<LoginScreen_ajeng> {
     try {
       await _firebaseService.signIn(email, password);
 
-      // 🔥 Ambil NIM user dari Firebase
+      // Ambil NIM user dari Firebase
       String? nim = await _firebaseService.getNimByEmail(email);
       print("NIM user: $nim");
 
-      // 🔥 Simpan NIM ke provider supaya checkout & diskon aktif
+      // Simpan NIM ke provider supaya checkout & diskon aktif
       if (nim != null) {
         final cartProvider = Provider.of<CartProviderLilis>(context, listen: false);
         cartProvider.setUserNim(nim);
@@ -49,7 +49,7 @@ class _LoginScreen_ajengState extends State<LoginScreen_ajeng> {
 
       if (!mounted) return;
 
-      // 🔥 Pindah ke Home
+      // Pindah ke Home
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (_) => HomeScreenAjeng()),
