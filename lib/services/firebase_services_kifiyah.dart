@@ -56,7 +56,7 @@ class FirebaseServiceKifiyah {
     return (doc['user_id'] ?? doc['nim'])?.toString();
   }
 
-  // 🚀 UPDATE STOK SAAT CHECKOUT
+  //  UPDATE STOK SAAT CHECKOUT
   // change = { "Air Mineral": 2, "Nasi Goreng": 1 }
   Future<void> updateStockTransaction(Map<String, int> change) async {
     final batch = _firestore.batch();
@@ -82,7 +82,7 @@ class FirebaseServiceKifiyah {
     await batch.commit();
   }
 
-  // 🚀 SIMPAN TRANSAKSI
+  // SIMPAN TRANSAKSI
   Future<void> createTransactionRecord(Map<String, dynamic> trxDoc) async {
     await _firestore
         .collection("Transaction")
