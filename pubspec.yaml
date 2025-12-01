@@ -61,7 +61,7 @@ flutter:
   # Tambahkan assets khusus Ajeng
   assets:
     - assets/images/ 
-  assets/images/logo.jpeg   # Tambahan untuk LOGO
+    - assets/images/logo.jpeg   # Tambahan untuk LOGO
 
   # Tambahkan font Sora untuk UI Anggota 2
   fonts: 
