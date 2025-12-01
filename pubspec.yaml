@@ -50,6 +50,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
 
+
   # The "flutter_lints" package below contains a set of recommended lints
   flutter_lints: ^5.0.0
 
@@ -69,3 +70,7 @@ flutter:
       fonts:
         - asset: assets/images/fonts/Sora-Regular.ttf
         - asset: assets/images/fonts/Sora-Bold.ttf
+  flutter_launcher_icons:
+    android: true
+    ios: true
+    image_path: "assets/images/logo.jpeg" 
