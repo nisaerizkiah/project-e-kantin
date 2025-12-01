@@ -70,7 +70,7 @@ flutter:
       fonts:
         - asset: assets/images/fonts/Sora-Regular.ttf
         - asset: assets/images/fonts/Sora-Bold.ttf
-  flutter_launcher_icons:
-    android: true
-    ios: true
-    image_path: "assets/images/logo.jpeg" 
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/images/logo.jpeg" 
