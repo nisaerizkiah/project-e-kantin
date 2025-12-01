@@ -5,7 +5,6 @@ import '../providers/cart_provider_lilis.dart';
 class CartScreen_ajeng extends StatelessWidget {
   CartScreen_ajeng({Key? key}) : super(key: key);
 
-  // menambahkan loading pop up
   void showLoading(BuildContext context) {
     showDialog(
       context: context,
@@ -23,10 +22,10 @@ class CartScreen_ajeng extends StatelessWidget {
     return Scaffold(
       backgroundColor: const Color(0xFFF8F5FF),
       appBar: AppBar(
-        title: const Text("Keranjang", style: TextStyle(color: Colors.white)),
-        backgroundColor: Colors.deepPurple,
-        elevation: 0,
         iconTheme: const IconThemeData(color: Colors.white),
+        backgroundColor: Colors.deepPurple,
+        title: const Text("Keranjang Belanja", style: TextStyle(color: Colors.white)),
+        elevation: 0,
       ),
 
       body: cart.items.isEmpty
@@ -40,14 +39,14 @@ class CartScreen_ajeng extends StatelessWidget {
               children: [
                 Expanded(
                   child: ListView.builder(
-                    padding: const EdgeInsets.all(18),
+                    padding: const EdgeInsets.all(16),
                     itemCount: cart.items.length,
                     itemBuilder: (context, index) {
                       final product = cart.items.keys.toList()[index];
                       final qty = cart.items.values.toList()[index];
 
                       return Container(
-                        margin: const EdgeInsets.only(bottom: 12),
+                        margin: const EdgeInsets.only(bottom: 14),
                         padding: const EdgeInsets.all(14),
                         decoration: BoxDecoration(
                           color: Colors.white,
@@ -63,7 +62,6 @@ class CartScreen_ajeng extends StatelessWidget {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                        
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -75,75 +73,29 @@ class CartScreen_ajeng extends StatelessWidget {
                                   ),
                                 ),
                                 const SizedBox(height: 6),
-
                                 Row(
                                   children: [
-                                    // BUTTON MINUS 
                                     GestureDetector(
                                       onTap: () => cart.decreaseItem(product),
-                                      child: Container(
-                                        padding: const EdgeInsets.symmetric(
-                                          horizontal: 10,
-                                          vertical: 2,
-                                        ),
-                                        decoration: BoxDecoration(
-                                          color: Colors.deepPurple,
-                                          borderRadius: BorderRadius.circular(
-                                            6,
-                                          ),
-                                        ),
-                                        child: const Text(
-                                          "-",
-                                          style: TextStyle(
-                                            fontSize: 18,
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                      ),
+                                      child: buttonQty("-", Colors.deepPurple),
                                     ),
-
-                                    const SizedBox(width: 10),
-
+                                    const SizedBox(width: 12),
                                     Text(
                                       "$qty",
                                       style: const TextStyle(
-                                        fontSize: 15,
+                                        fontSize: 16,
                                         fontWeight: FontWeight.bold,
-                                        color: Colors.black87,
                                       ),
                                     ),
-
-                                    const SizedBox(width: 10),
-
-                                    
+                                    const SizedBox(width: 12),
                                     GestureDetector(
                                       onTap: () => cart.addItem(product),
-                                      child: Container(
-                                        padding: const EdgeInsets.symmetric(
-                                          horizontal: 10,
-                                          vertical: 2,
-                                        ),
-                                        decoration: BoxDecoration(
-                                          color: Colors.deepPurple,
-                                          borderRadius: BorderRadius.circular(
-                                            6,
-                                          ),
-                                        ),
-                                        child: const Text(
-                                          "+",
-                                          style: TextStyle(
-                                            fontSize: 18,
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                      ),
+                                      child: buttonQty("+", Colors.deepPurple),
                                     ),
                                   ],
                                 ),
                               ],
                             ),
-
-                            
                             Text(
                               "Rp ${product.price}",
                               style: const TextStyle(
@@ -159,7 +111,7 @@ class CartScreen_ajeng extends StatelessWidget {
                   ),
                 ),
 
-                
+                // ======= BOTTOM SECTION (NO INPUT NIM) =======
                 Container(
                   padding: const EdgeInsets.all(22),
                   decoration: const BoxDecoration(
@@ -172,86 +124,67 @@ class CartScreen_ajeng extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      
-                      TextField(
-                        decoration: const InputDecoration(
-                          labelText: "Masukkan NIM",
-                          border: OutlineInputBorder(),
+                      // NIM otomatis dari login
+                      Text(
+                        "NIM: ${cart.userNim}",
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
                         ),
-                        keyboardType: TextInputType.number,
-                        onChanged: (value) {
-                          cart.setUserNim(value);
+                      ),
+                      const SizedBox(height: 6),
 
-                          if (value.isNotEmpty) {
-                            final last =
-                                int.tryParse(value[value.length - 1]) ?? 0;
+                      // Promo info otomatis berdasarkan digit terakhir NIM
+                      if (cart.userNim.isNotEmpty)
+                        Text(
+                          int.parse(cart.userNim[cart.userNim.length - 1]) % 2 == 0
+                              ? "NIM Genap: Gratis Ongkir!"
+                              : "NIM Ganjil: Diskon 5%!",
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.green,
+                          ),
+                        ),
 
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(
-                                  last % 2 == 0
-                                      ? "NIM Genap → Kamu dapat GRATIS ONGKIR!"
-                                      : "NIM Ganjil → Kamu dapat DISKON 5%!",
-                                ),
-                                duration: const Duration(seconds: 2),
-                              ),
-                            );
-                          }
-                        },
+                      const SizedBox(height: 18),
+
+                      Text("Subtotal: Rp ${cart.subTotal.toStringAsFixed(0)}"),
+                      const SizedBox(height: 6),
+
+                      Text(
+                        "Diskon: - Rp ${cart.discount.toStringAsFixed(0)}",
+                        style: const TextStyle(
+                          color: Colors.green,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 6),
+
+                      Text(
+                        cart.shippingCost == 0
+                            ? "Ongkir: GRATIS"
+                            : "Ongkir: Rp ${cart.shippingCost.toStringAsFixed(0)}",
+                        style: TextStyle(
+                          color: cart.shippingCost == 0 ? Colors.green : Colors.red,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+
+                      const Divider(height: 20),
+
+                      Text(
+                        "Total Bayar: Rp ${cart.finalTotal.toStringAsFixed(0)}",
+                        style: const TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.deepPurple,
+                        ),
                       ),
 
                       const SizedBox(height: 18),
 
-                      
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Text(
-                            "Subtotal: Rp ${cart.subTotal.toStringAsFixed(0)}",
-                          ),
-
-                          const SizedBox(height: 6),
-
-                          if (cart.userNim.isNotEmpty)
-                            Text(
-                              "Diskon: - Rp ${cart.discount.toStringAsFixed(0)}",
-                              style: const TextStyle(
-                                color: Colors.green,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-
-                          const SizedBox(height: 6),
-
-                          if (cart.userNim.isNotEmpty)
-                            Text(
-                              cart.shippingCost == 0
-                                  ? "Ongkir: GRATIS"
-                                  : "Ongkir: Rp ${cart.shippingCost.toStringAsFixed(0)}",
-                              style: TextStyle(
-                                color: cart.shippingCost == 0
-                                    ? Colors.green
-                                    : Colors.red,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-
-                          const Divider(height: 20),
-
-                          Text(
-                            "Total Bayar: Rp ${cart.finalTotal.toStringAsFixed(0)}",
-                            style: const TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.deepPurple,
-                            ),
-                          ),
-                        ],
-                      ),
-
-                      const SizedBox(height: 18),
-
-                      
+                      // CHECKOUT BUTTON
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.deepPurple,
@@ -261,28 +194,13 @@ class CartScreen_ajeng extends StatelessWidget {
                           ),
                         ),
                         onPressed: () async {
-                          if (cart.userNim.isEmpty) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text("Masukkan NIM dulu"),
-                              ),
-                            );
-                            return;
-                          }
-
-                          // SHOW LOADING
                           showLoading(context);
-
                           final success = await cart.checkout();
-
-                          // CLOSE LOADING
                           Navigator.pop(context);
 
                           if (success) {
                             ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text("Pembayaran Berhasil!"),
-                              ),
+                              const SnackBar(content: Text("Pembayaran Berhasil!")),
                             );
                             cart.clearCart();
                             Navigator.pop(context);
@@ -293,7 +211,7 @@ class CartScreen_ajeng extends StatelessWidget {
                           }
                         },
                         child: const Text(
-                          "Bayar Sekarang",
+                          "Checkout Sekarang",
                           style: TextStyle(fontSize: 16, color: Colors.white),
                         ),
                       ),
@@ -302,6 +220,17 @@ class CartScreen_ajeng extends StatelessWidget {
                 ),
               ],
             ),
+    );
+  }
+
+  Widget buttonQty(String label, Color color) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(6)),
+      child: Text(
+        label,
+        style: const TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),
+      ),
     );
   }
 }

@@ -12,20 +12,31 @@ class RegisterScreen_ajeng extends StatefulWidget {
 
 class _RegisterScreen_ajengState extends State<RegisterScreen_ajeng> {
   final TextEditingController nimController = TextEditingController();
+  final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  final TextEditingController confirmPasswordController = TextEditingController();
 
   final FirebaseServiceKifiyah _firebaseService = FirebaseServiceKifiyah();
   bool isLoading = false;
 
   Future<void> registerUser() async {
     String nim = nimController.text.trim();
+    String name = nameController.text.trim();
     String email = emailController.text.trim();
     String password = passwordController.text.trim();
+    String confirmPassword = confirmPasswordController.text.trim();
 
-    if (nim.isEmpty || email.isEmpty || password.isEmpty) {
+    if (nim.isEmpty || name.isEmpty || email.isEmpty || password.isEmpty || confirmPassword.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Semua field wajib diisi")),
+      );
+      return;
+    }
+
+    if (password != confirmPassword) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Password tidak sama")),
       );
       return;
     }
@@ -136,7 +147,23 @@ class _RegisterScreen_ajengState extends State<RegisterScreen_ajeng> {
                       keyboardType: TextInputType.number,
                       decoration: InputDecoration(
                         prefixIcon: const Icon(Iconsax.card),
-                        hintText: "NIM",
+                        hintText: "NIM (User ID)",
+                        filled: true,
+                        fillColor: const Color(0xFFF3E9FF),
+                        border: OutlineInputBorder(
+                          borderSide: BorderSide.none,
+                          borderRadius: BorderRadius.circular(14),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 18),
+
+                    // NAMA LENGKAP
+                    TextField(
+                      controller: nameController,
+                      decoration: InputDecoration(
+                        prefixIcon: const Icon(Iconsax.user),
+                        hintText: "Nama Lengkap",
                         filled: true,
                         fillColor: const Color(0xFFF3E9FF),
                         border: OutlineInputBorder(
@@ -153,7 +180,7 @@ class _RegisterScreen_ajengState extends State<RegisterScreen_ajeng> {
                       keyboardType: TextInputType.emailAddress,
                       decoration: InputDecoration(
                         prefixIcon: const Icon(Iconsax.sms),
-                        hintText: "Email Kampus",
+                        hintText: "Email",
                         filled: true,
                         fillColor: const Color(0xFFF3E9FF),
                         border: OutlineInputBorder(
@@ -179,9 +206,26 @@ class _RegisterScreen_ajengState extends State<RegisterScreen_ajeng> {
                         ),
                       ),
                     ),
+                    const SizedBox(height: 18),
+
+                    // KONFIRMASI PASSWORD
+                    TextField(
+                      controller: confirmPasswordController,
+                      obscureText: true,
+                      decoration: InputDecoration(
+                        prefixIcon: const Icon(Iconsax.lock),
+                        hintText: "Konfirmasi Password",
+                        filled: true,
+                        fillColor: const Color(0xFFF3E9FF),
+                        border: OutlineInputBorder(
+                          borderSide: BorderSide.none,
+                          borderRadius: BorderRadius.circular(14),
+                        ),
+                      ),
+                    ),
                     const SizedBox(height: 30),
 
-                    // DAFTAR BUTTON
+                    // BUTTON DAFTAR
                     SizedBox(
                       width: double.infinity,
                       child: ElevatedButton(
@@ -205,17 +249,15 @@ class _RegisterScreen_ajengState extends State<RegisterScreen_ajeng> {
                               ),
                       ),
                     ),
+
                     const SizedBox(height: 16),
 
-                    // LOGIN LINK
                     Center(
                       child: GestureDetector(
                         onTap: () {
                           Navigator.pushReplacement(
                             context,
-                            MaterialPageRoute(
-                              builder: (_) => const LoginScreen_ajeng(),
-                            ),
+                            MaterialPageRoute(builder: (_) => const LoginScreen_ajeng()),
                           );
                         },
                         child: const Text(
