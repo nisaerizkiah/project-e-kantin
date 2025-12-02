@@ -29,7 +29,6 @@ class CartProviderLilis extends ChangeNotifier {
 
   void clearCart() {
     items.clear();
-    userNim = "";
     notifyListeners();
   }
 
@@ -60,7 +59,7 @@ class CartProviderLilis extends ChangeNotifier {
   }
 
   double get shippingCost {
-    if (userNim.isEmpty) return 5000; 
+    if (userNim.isEmpty) return 5000;
 
     int lastDigit = int.parse(userNim[userNim.length - 1]);
 
@@ -83,11 +82,9 @@ class CartProviderLilis extends ChangeNotifier {
         "total_final": finalTotal,
         "status": "Success",
         "items": items.entries
-            .map((e) => {
-                  "name": e.key.name,
-                  "price": e.key.price,
-                  "qty": e.value,
-                })
+            .map(
+              (e) => {"name": e.key.name, "price": e.key.price, "qty": e.value},
+            )
             .toList(),
         "timestamp": FieldValue.serverTimestamp(),
       });
