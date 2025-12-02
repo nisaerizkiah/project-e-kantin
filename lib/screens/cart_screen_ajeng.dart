@@ -111,7 +111,7 @@ class CartScreen_ajeng extends StatelessWidget {
                   ),
                 ),
 
-                // ======= BOTTOM SECTION (NO INPUT NIM) =======
+                // BOTTOM SECTION (NO INPUT NIM)
                 Container(
                   padding: const EdgeInsets.all(22),
                   decoration: const BoxDecoration(
