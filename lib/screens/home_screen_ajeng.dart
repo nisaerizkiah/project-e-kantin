@@ -131,7 +131,7 @@ class HomeScreenAjeng extends StatelessWidget {
                           final product = ProductModelKifiyah(
                             productId: item["name"],
                             name: item["name"],
-                            price: (item["price"] as num).toDouble(),   // 🔥 perbaikan penting
+                            price: (item["price"] as num).toDouble(),   
                             stock: 1,
                             imageUrl: item["image"],
                           );
