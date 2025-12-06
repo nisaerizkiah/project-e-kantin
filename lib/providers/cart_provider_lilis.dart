@@ -32,62 +32,62 @@ class CartProviderLilis extends ChangeNotifier {
     notifyListeners();
   }
 
-  // Add Nim Setter
   void setUserNim(String nim) {
     userNim = nim;
     notifyListeners();
   }
 
   double get subTotal {
-    double total = 0;
-    items.forEach((product, qty) {
-      total += product.price * qty;
-    });
-    return total;
+    return items.entries.fold(0, (sum, e) => sum + (e.key.price * e.value));
   }
 
-  //Business Logic
   double get discount {
     if (userNim.isEmpty) return 0;
-
     int lastDigit = int.parse(userNim[userNim.length - 1]);
-
-    if (lastDigit % 2 != 0) {
-      return subTotal * 0.05;
-    }
-    return 0;
+    return lastDigit % 2 != 0 ? subTotal * 0.05 : 0;
   }
 
   double get shippingCost {
     if (userNim.isEmpty) return 5000;
-
     int lastDigit = int.parse(userNim[userNim.length - 1]);
-
     return lastDigit % 2 == 0 ? 0 : 5000;
   }
 
   double get finalTotal => subTotal - discount + shippingCost;
 
-  // Firestore Checkout
   Future<bool> checkout() async {
     if (userNim.isEmpty || items.isEmpty) return false;
 
     try {
+      WriteBatch batch = _db.batch();
+
+      for (var entry in items.entries) {
+        var product = entry.key;
+        var qty = entry.value;
+
+        var docRef = _db.collection("products").doc(product.productId);
+
+        product.stock -= qty;
+        batch.update(docRef, {"stock": product.stock});
+      }
+
+      await batch.commit();
+
       await _db.collection("Transactions").add({
         "trx_id": DateTime.now().millisecondsSinceEpoch.toString(),
         "user_nim": userNim,
-        "sub_total": subTotal,
-        "discount": discount,
-        "shipping_cost": shippingCost,
         "total_final": finalTotal,
-        "status": "Success",
         "items": items.entries
-            .map(
-              (e) => {"name": e.key.name, "price": e.key.price, "qty": e.value},
-            )
+            .map((e) => {
+                  "name": e.key.name,
+                  "qty": e.value,
+                })
             .toList(),
         "timestamp": FieldValue.serverTimestamp(),
       });
+
+      clearCart();
+      notifyListeners();
 
       return true;
     } catch (e) {
