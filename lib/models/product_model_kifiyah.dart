@@ -1,9 +1,10 @@
-// lib/models/product_model_kifiyah.dart
+import 'package:cloud_firestore/cloud_firestore.dart'; 
+
 class ProductModelKifiyah {
   final String productId;
   final String name;
   final double price;
-  final int stock;
+  int stock;
   final String imageUrl;
 
   ProductModelKifiyah({
@@ -24,6 +25,10 @@ class ProductModelKifiyah {
     );
   }
 
+  factory ProductModelKifiyah.fromFirestore(DocumentSnapshot doc) {
+    return ProductModelKifiyah.fromJson(doc.data() as Map<String, dynamic>);
+  }
+
   Map<String, dynamic> toJson() {
     return {
       'product_id': productId,
@@ -33,4 +38,12 @@ class ProductModelKifiyah {
       'image_url': imageUrl,
     };
   }
+
+  @override
+  bool operator ==(Object other) {
+    return other is ProductModelKifiyah && other.productId == productId;
+  }
+
+  @override
+  int get hashCode => productId.hashCode;
 }
