@@ -16,69 +16,6 @@ class _HomeScreenAjengState extends State<HomeScreenAjeng> {
   final FirebaseServiceKifiyah _firebase = FirebaseServiceKifiyah();
   bool initialized = false;
 
-  final List<Map<String, dynamic>> defaultMenu = [
-    {
-      "name": "Air Mineral",
-      "image": "assets/images/air mineral.jpeg",
-      "price": 5000,
-      "stock": 5,
-    },
-    {
-      "name": "Ayam Geprek",
-      "image": "assets/images/ayam geprek.jpeg",
-      "price": 15000,
-      "stock": 9,
-    },
-    {
-      "name": "Bakso",
-      "image": "assets/images/bakso.jpeg",
-      "price": 12000,
-      "stock": 7,
-    },
-    {
-      "name": "Boba",
-      "image": "assets/images/boba.jpeg",
-      "price": 15000,
-      "stock": 8,
-    },
-    {
-      "name": "Es Teh",
-      "image": "assets/images/es teh.jpeg",
-      "price": 4000,
-      "stock": 10,
-    },
-    {
-      "name": "Jus Alpukat",
-      "image": "assets/images/jus alpukat.jpeg",
-      "price": 9000,
-      "stock": 10,
-    },
-    {
-      "name": "Jus Jeruk",
-      "image": "assets/images/jus jeruk.jpeg",
-      "price": 7000,
-      "stock": 10,
-    },
-    {
-      "name": "Mie Ayam",
-      "image": "assets/images/mie ayam.jpeg",
-      "price": 12000,
-      "stock": 10,
-    },
-    {
-      "name": "Nasi Goreng",
-      "image": "assets/images/nasi goreng.jpeg",
-      "price": 13000,
-      "stock": 10,
-    },
-    {
-      "name": "Sosis Bakar",
-      "image": "assets/images/sosis bakar.jpeg",
-      "price": 10000,
-      "stock": 10,
-    },
-  ];
-
   @override
   void initState() {
     super.initState();
@@ -86,22 +23,7 @@ class _HomeScreenAjengState extends State<HomeScreenAjeng> {
   }
 
   Future<void> setupProducts() async {
-    final data = await _firebase.getProducts();
-
-    if (data.isEmpty) {
-      for (var item in defaultMenu) {
-        await _firebase.addProduct(
-          ProductModelKifiyah(
-            productId: item["name"],
-            name: item["name"],
-            price: (item["price"] as num).toDouble(),
-            stock: item["stock"],
-            imageUrl: item["image"],
-          ),
-        );
-      }
-    }
-
+    await _firebase.seedProductsIfEmpty();
     setState(() => initialized = true);
   }
 
@@ -123,9 +45,7 @@ class _HomeScreenAjengState extends State<HomeScreenAjeng> {
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(
-                          builder: (_) => const CartScreenAjeng(),
-                        ),
+                        MaterialPageRoute(builder: (_) => const CartScreenAjeng()),
                       );
                     },
                   ),
@@ -141,10 +61,7 @@ class _HomeScreenAjengState extends State<HomeScreenAjeng> {
                         ),
                         child: Text(
                           cart.items.length.toString(),
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 12,
-                          ),
+                          style: const TextStyle(color: Colors.white, fontSize: 12),
                         ),
                       ),
                     ),
@@ -195,9 +112,7 @@ class _HomeScreenAjengState extends State<HomeScreenAjeng> {
                         children: [
                           Expanded(
                             child: ClipRRect(
-                              borderRadius: const BorderRadius.vertical(
-                                top: Radius.circular(20),
-                              ),
+                              borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
                               child: Image.asset(
                                 item.imageUrl,
                                 fit: BoxFit.cover,
@@ -206,45 +121,27 @@ class _HomeScreenAjengState extends State<HomeScreenAjeng> {
                           ),
 
                           Padding(
-                            padding: const EdgeInsets.symmetric(
-                              vertical: 8,
-                              horizontal: 10,
-                            ),
+                            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 10),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
-                                  item.name,
-                                  style: const TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
+                                Text(item.name,
+                                    style: const TextStyle(
+                                        fontSize: 16, fontWeight: FontWeight.bold)),
                                 const SizedBox(height: 4),
-                                Text(
-                                  "Rp ${item.price.toInt()}",
-                                  style: const TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.black54,
-                                  ),
-                                ),
+                                Text("Rp ${item.price.toInt()}",
+                                    style: const TextStyle(
+                                        fontSize: 14, color: Colors.black54)),
                                 const SizedBox(height: 4),
-                                Text(
-                                  "Stok: ${item.stock}",
-                                  style: const TextStyle(
-                                    fontSize: 13,
-                                    color: Colors.red,
-                                  ),
-                                ),
+                                Text("Stok: ${item.stock}",
+                                    style: const TextStyle(
+                                        fontSize: 13, color: Colors.red)),
                               ],
                             ),
                           ),
 
                           Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 10,
-                              vertical: 8,
-                            ),
+                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
                             child: SizedBox(
                               height: 42,
                               child: ElevatedButton(
@@ -257,22 +154,16 @@ class _HomeScreenAjengState extends State<HomeScreenAjeng> {
                                 onPressed: item.stock > 0
                                     ? () async {
                                         await _firebase.updateProductStock(
-                                          item.productId,
-                                          item.stock - 1,
-                                        );
+                                            item.productId, item.stock - 1);
 
                                         if (!mounted) return;
 
-                                        Provider.of<CartProviderLilis>(
-                                          context,
-                                          listen: false,
-                                        ).addItem(item);
+                                        Provider.of<CartProviderLilis>(context, listen: false)
+                                            .addItem(item);
                                       }
                                     : null,
-                                child: const Text(
-                                  "Tambah",
-                                  style: TextStyle(color: Colors.white),
-                                ),
+                                child: const Text("Tambah",
+                                    style: TextStyle(color: Colors.white)),
                               ),
                             ),
                           ),
