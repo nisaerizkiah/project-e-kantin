@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 import 'firebase_options.dart';
 import 'providers/cart_provider_lilis.dart';
 
-// Screens
 import 'screens/login_screen_ajeng.dart';
 import 'screens/register_screen_ajeng.dart';
 import 'screens/home_screen_ajeng.dart';
@@ -39,12 +38,14 @@ class MyApp extends StatelessWidget {
         fontFamily: "Sora",
         useMaterial3: true,
       ),
-      home: const LoginScreen_ajeng(),
+
+      home: const LoginScreenAjeng(),
+
       routes: {
-        "/login": (context) => const LoginScreen_ajeng(),
-        "/register": (context) => const RegisterScreen_ajeng(),
+        "/login": (context) => const LoginScreenAjeng(),
+        "/register": (context) => const RegisterScreenAjeng(),
         "/home": (context) => HomeScreenAjeng(),
-        "/cart": (context) => CartScreen_ajeng(),
+        "/cart": (context) => const CartScreenAjeng(),
       },
     );
   }
